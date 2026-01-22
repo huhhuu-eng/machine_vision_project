@@ -26,7 +26,7 @@ def check_and_load_model(weights_path):
     except FileNotFoundError:
 
         print(f" {weights_path} 下载失败，尝试手动指定官方权重URL...")
-        # 直接使用Ultralytics官方权重地址
+        
         model = YOLO(f"https://github.com/ultralytics/assets/releases/download/v8.3.0/{weights_path}")
         return model
     except Exception as e:
@@ -41,14 +41,14 @@ def detect_shared_bike(img_path, save_dir):
     img = cv2.imread(img_path)
     if img is None:
         raise ValueError(f"无法读取图片，请检查路径：{img_path}")
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # 转换为RGB格式（适配matplotlib显示）
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  
 
     # 步骤2：特征提取+目标定位+分类判断（YOLOv5核心推理）
     # conf=0.5：置信度阈值，过滤低置信度检测结果；classes=[1]：仅检测COCO的"bicycle"类（类别ID=1）
     results = model(img, conf=0.5, classes=[1])
 
     # 步骤3：解析检测结果（提取共享单车位置）
-    bike_boxes = []  # 存储共享单车的边界框坐标：[x1, y1, x2, y2]
+    bike_boxes = []  
     for r in results:
         boxes = r.boxes
         for box in boxes:
@@ -96,4 +96,5 @@ if __name__ == "__main__":
         print("="*50)
 
     except Exception as e:
+
         print(f"检测过程出错：{e}")
